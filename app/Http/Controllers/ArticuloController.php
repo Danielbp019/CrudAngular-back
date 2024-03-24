@@ -23,32 +23,24 @@ class ArticuloController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        //
-        // $articulo = Articulo::create($request->all());
-        // return $articulo;
-        $nuevoArticulo = Articulo::create([
-            'titulo' => $request['titulo'],
-            'cuerpo' => $request['cuerpo'],
-            'autor' => $request['autor']
-        ]);
-        if ($nuevoArticulo) {
-            return array('success' => true, 'message' => 'Se creo correctamente.');
-        } else {
-            return array('success' => false, 'message' => 'Error al crear.');
-        }
+        try {
+            $nuevoArticulo = Articulo::create([
+                'titulo' => $request['titulo'],
+                'cuerpo' => $request['cuerpo'],
+                'autor' => $request['autor']
+            ]);
+        } catch (\Exception $e) {
+            //Si existe error.
+            return array('success' => false, 'message' => $e->getMessage());
+        } //Si se ejecuta bien.
+        return array('success' => true, 'message' => 'Se creo correctamente.');
     }
 
     /**
      * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
@@ -58,15 +50,10 @@ class ArticuloController extends Controller
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        //
-        if (Articulo::where('id', $id)->exists()) {
+        try {
             $editarArticulo = Articulo::find($id);
             $editarArticulo->fill([
                 'titulo' => $request['titulo'],
@@ -74,33 +61,27 @@ class ArticuloController extends Controller
                 'autor' => $request['autor']
             ]);
             $editarArticulo->save();
-
-            if ($editarArticulo) {
-                return array('success' => true, 'message' => 'Se edito correctamente.');
-            } else {
-                return array('success' => false, 'message' => 'Error al editar.');
-            }
-        }
+        } catch (\Exception $e) {
+            //Si existe error.
+            return array('success' => false, 'message' => $e->getMessage());
+        } //Si se ejecuta bien.
+        return array('success' => true, 'message' => 'Se edito correctamente.');
     }
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        //
-        if (Articulo::where('id', $id)->exists()) {
-            $borrararticulo = Articulo::find($id);
+        try {
+            $borrararticulo = Articulo::findOrFail($id);
             $borrararticulo->delete();
-
-            if ($borrararticulo) {
-                return array('success' => true, 'message' => 'Se borro correctamente.');
-            } else {
-                return array('success' => false, 'message' => 'Error al borrar.');
-            }
-        }
+        } catch (\Exception $e) {
+            //Si existe error.
+            return array('success' => false, 'message' => $e->getMessage());
+        } //Si se ejecuta bien.
+        return array('success' => true, 'message' => 'Registro eliminado correctamente.');
     }
+
+    //End controller
 }
