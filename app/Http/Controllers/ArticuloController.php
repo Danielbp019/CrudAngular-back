@@ -32,11 +32,12 @@ class ArticuloController extends Controller
                 'cuerpo' => $request['cuerpo'],
                 'autor' => $request['autor']
             ]);
+            // Devolver el artículo creado
+            return array('success' => true, 'message' => 'Se creo correctamente.', 'articulo' => $nuevoArticulo);
         } catch (\Exception $e) {
-            //Si existe error.
+            // Si existe error.
             return array('success' => false, 'message' => $e->getMessage());
-        } //Si se ejecuta bien.
-        return array('success' => true, 'message' => 'Se creo correctamente.');
+        }
     }
 
     /**
@@ -61,11 +62,12 @@ class ArticuloController extends Controller
                 'autor' => $request['autor']
             ]);
             $editarArticulo->save();
+            // Devolver el artículo actualizado
+            return array('success' => true, 'message' => 'Se edito correctamente.', 'articulo' => $editarArticulo);
         } catch (\Exception $e) {
-            //Si existe error.
+            // Si existe error.
             return array('success' => false, 'message' => $e->getMessage());
-        } //Si se ejecuta bien.
-        return array('success' => true, 'message' => 'Se edito correctamente.');
+        }
     }
 
     /**
