@@ -28,9 +28,9 @@ class ArticuloController extends Controller
     {
         try {
             $nuevoArticulo = Articulo::create([
-                'titulo' => $request['titulo'],
-                'cuerpo' => $request['cuerpo'],
-                'autor' => $request['autor']
+                'titulo' => trim($request['titulo']),
+                'cuerpo' => trim($request['cuerpo']),
+                'autor' => trim($request['autor'])
             ]);
             // Devolver el artículo creado
             return array('success' => true, 'message' => 'Se creo correctamente.', 'articulo' => $nuevoArticulo);
@@ -57,9 +57,9 @@ class ArticuloController extends Controller
         try {
             $editarArticulo = Articulo::find($id);
             $editarArticulo->fill([
-                'titulo' => $request['titulo'],
-                'cuerpo' => $request['cuerpo'],
-                'autor' => $request['autor']
+                'titulo' => trim($request['titulo']),
+                'cuerpo' => trim($request['cuerpo']),
+                'autor' => trim($request['autor'])
             ]);
             $editarArticulo->save();
             // Devolver el artículo actualizado
