@@ -1,2 +1,4 @@
+# Evitar indexacion de motores de busqueda agregando el nombre de las rutas
 User-agent: *
-Disallow:
+Disallow: /
+Disallow: /articulos
