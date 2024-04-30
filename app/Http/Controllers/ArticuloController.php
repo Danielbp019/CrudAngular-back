@@ -26,6 +26,12 @@ class ArticuloController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'titulo' => ['required', 'string', 'max:255'],
+            'cuerpo' => ['required', 'string'],
+            'autor' => ['required', 'string', 'max:255'],
+        ]);
+
         try {
             $nuevoArticulo = Articulo::create([
                 'titulo' => trim($request['titulo']),
@@ -33,10 +39,10 @@ class ArticuloController extends Controller
                 'autor' => trim($request['autor'])
             ]);
             // Devolver el artículo creado
-            return array('success' => true, 'message' => 'Se creo correctamente.', 'articulo' => $nuevoArticulo);
+            return response()->json(['success' => true, 'message' => 'Se creo correctamente el articulo.', 'articulo' => $nuevoArticulo], 201);
         } catch (\Exception $e) {
             // Si existe error.
-            return array('success' => false, 'message' => $e->getMessage());
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
 
@@ -45,8 +51,14 @@ class ArticuloController extends Controller
      */
     public function show($id)
     {
-        //
-        return Articulo::find($id);
+        try {
+            $articulo = Articulo::findOrFail($id);
+
+            return response()->json($articulo);
+        } catch (\Exception $e) {
+            // Si existe error.
+            return response()->json(['success' => false, 'message' => 'Articulo no encontrado.'], 404);
+        }
     }
 
     /**
@@ -54,19 +66,39 @@ class ArticuloController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'titulo' => ['string', 'max:255'],
+            'cuerpo' => ['string'],
+            'autor' => ['string', 'max:255'],
+        ]);
+
         try {
             $editarArticulo = Articulo::find($id);
+
+            /* Asignacion en masa sin validad campos vacios
             $editarArticulo->fill([
                 'titulo' => trim($request['titulo']),
                 'cuerpo' => trim($request['cuerpo']),
                 'autor' => trim($request['autor'])
-            ]);
+            ]); */
+
+            // El metodo has verifica si un campo esta presente en la solicitud
+            if ($request->has('titulo')) {
+                $editarArticulo->titulo = trim($request['titulo']);
+            }
+            if ($request->has('cuerpo')) {
+                $editarArticulo->cuerpo = trim($request['cuerpo']);
+            }
+            if ($request->has('autor')) {
+                $editarArticulo->autor = trim($request['autor']);
+            }
             $editarArticulo->save();
+
             // Devolver el artículo actualizado
-            return array('success' => true, 'message' => 'Se edito correctamente.', 'articulo' => $editarArticulo);
+            return array(['success' => true, 'message' => 'Se edito correctamente el articulo.', 'articulo' => $editarArticulo], 200);
         } catch (\Exception $e) {
             // Si existe error.
-            return array('success' => false, 'message' => $e->getMessage());
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
 
@@ -78,11 +110,13 @@ class ArticuloController extends Controller
         try {
             $borrararticulo = Articulo::findOrFail($id);
             $borrararticulo->delete();
+
+            // Si se ejecuta bien.
+            return response()->json(['success' => true, 'message' => 'Articulo eliminado correctamente.'], 204);
         } catch (\Exception $e) {
-            //Si existe error.
-            return array('success' => false, 'message' => $e->getMessage());
-        } //Si se ejecuta bien.
-        return array('success' => true, 'message' => 'Registro eliminado correctamente.');
+            // Si existe error.
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
     }
 
     //End controller
