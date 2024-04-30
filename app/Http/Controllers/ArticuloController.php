@@ -95,7 +95,7 @@ class ArticuloController extends Controller
             $editarArticulo->save();
 
             // Devolver el artículo actualizado
-            return array(['success' => true, 'message' => 'Se edito correctamente el articulo.', 'articulo' => $editarArticulo], 200);
+            return response()->json(['success' => true, 'message' => 'Se edito correctamente el articulo.', 'articulo' => $editarArticulo], 200);
         } catch (\Exception $e) {
             // Si existe error.
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
