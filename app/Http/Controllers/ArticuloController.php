@@ -73,14 +73,7 @@ class ArticuloController extends Controller
         ]);
 
         try {
-            $editarArticulo = Articulo::find($id);
-
-            /* Asignacion en masa sin validad campos vacios
-            $editarArticulo->fill([
-                'titulo' => trim($request['titulo']),
-                'cuerpo' => trim($request['cuerpo']),
-                'autor' => trim($request['autor'])
-            ]); */
+            $editarArticulo = Articulo::findOrFail($id);
 
             // El metodo has verifica si un campo esta presente en la solicitud
             if ($request->has('titulo')) {
@@ -112,7 +105,7 @@ class ArticuloController extends Controller
             $borrararticulo->delete();
 
             // Si se ejecuta bien.
-            return response()->json(['success' => true, 'message' => 'Articulo eliminado correctamente.'], 204);
+            return response()->json(['success' => true, 'message' => 'Articulo eliminado correctamente.'], 200);
         } catch (\Exception $e) {
             // Si existe error.
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
