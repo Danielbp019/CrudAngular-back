@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Articulo;
+// Validaciones:
+use App\Http\Requests\ArticuloStoreRequest;
+use App\Http\Requests\ArticuloUpdateRequest;
 
 class ArticuloController extends Controller
 {
@@ -24,14 +27,8 @@ class ArticuloController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ArticuloStoreRequest $request)
     {
-        $request->validate([
-            'titulo' => ['required', 'string', 'max:255'],
-            'cuerpo' => ['required', 'string'],
-            'autor' => ['required', 'string', 'max:255'],
-        ]);
-
         try {
             $nuevoArticulo = Articulo::create([
                 'titulo' => trim($request['titulo']),
@@ -64,14 +61,8 @@ class ArticuloController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(ArticuloUpdateRequest $request, $id)
     {
-        $request->validate([
-            'titulo' => ['string', 'max:255'],
-            'cuerpo' => ['string'],
-            'autor' => ['string', 'max:255'],
-        ]);
-
         try {
             $editarArticulo = Articulo::findOrFail($id);
 
